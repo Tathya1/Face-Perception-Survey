@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Survey</title>
+    <style>
+        /* Basic Reset & Variables */
+        :root {
+            --primary-color: #007bff; /* Blue */
+            --secondary-color: #6c757d; /* Gray */
+            --success-color: #28a745; /* Green */
+            --light-gray: #f8f9fa;
+            --dark-gray: #343a40;
+            --border-color: #dee2e6;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --container-max-width: 850px;
+            --face-size: 150px;
+            --face-aspect-ratio: 1.33; /* height = width * aspect-ratio */
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align container to top */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            background-color: #ffffff;
+            max-width: var(--container-max-width);
+            width: 100%;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px; /* Add some space from top */
+        }
+
+        /* Screen Sections */
+        .screen {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Typography */
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2.2em;
+        }
+
+        h2 {
+            color: var(--dark-gray);
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+         h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        p, ol {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 1.05em;
+        }
+        ol {
+            text-align: left;
+            display: inline-block; /* Center the list block */
+            padding-left: 50px; /* Indent list items */
+            margin-left: auto;
+            margin-right: auto;
+         }
+        li {
+             margin-bottom: 8px;
+        }
+
+        /* Face Display */
+        .face-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px; /* Increased gap */
+            margin: 30px 0;
+        }
+
+        .face {
+            width: var(--face-size);
+            height: calc(var(--face-size) * var(--face-aspect-ratio));
+            border: 3px solid transparent; /* Slightly thicker border */
+            border-radius: 6px; /* Rounded corners */
+            overflow: hidden; /* Ensure image stays within border */
+            background-color: #eee; /* Placeholder bg */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #recognition-faces .face {
+            cursor: pointer;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease;
+        }
+        #recognition-faces .face:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-3px); /* Slight lift on hover */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        #recognition-faces .face.selected {
+            border-color: var(--success-color); /* Use success color for selection */
+            box-shadow: 0 0 12px rgba(40, 167, 69, 0.5); /* Green shadow */
+            transform: scale(1.03); /* Slightly larger when selected */
+        }
+
+        .face img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Buttons */
+        button {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin: 15px 5px;
+            cursor: pointer;
+            border-radius: 25px; /* Pill shape */
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button:hover:not(:disabled) {
+            background-color: #0056b3; /* Darker blue */
+            transform: translateY(-1px);
+        }
+         button:active:not(:disabled) {
+             transform: translateY(0px);
+             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+         }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Progress Bar & Timer */
+        .progress {
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px auto;
+            max-width: 400px; /* Limit width */
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.3s linear; /* Smoother transition */
+            border-radius: 6px;
+        }
+        .timer {
+            font-size: 2em; /* Larger timer */
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+
+        /* Results Table */
+        #results-table {
+            width: 100%;
+            max-width: 600px; /* Limit width */
+            border-collapse: collapse;
+            margin: 25px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            overflow: hidden; /* Clip shadow */
+        }
+        #results-table th, #results-table td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px; /* More padding */
+            text-align: center;
+        }
+        #results-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+         #results-table tbody tr:nth-child(even) {
+             background-color: var(--light-gray);
+         }
+        #results-table td:first-child {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin: 20px auto;
+            text-align: left; /* Labels left aligned */
+            max-width: 400px; /* Limit form width */
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+            font-size: 1.05em;
+        }
+        .form-group input[type="text"],
+        .form-group select {
+            padding: 12px 15px; /* More padding */
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1em;
+            margin-top: 5px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+         .form-group input[type="text"]:focus,
+         .form-group select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+         }
+
+        #participant-info {
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+            padding-top: 15px;
+        }
+
+        /* Validation & Status Messages */
+        #validation-message {
+            color: #dc3545; /* Red */
+            font-weight: bold;
+            margin-top: 15px;
+            min-height: 1.2em; /* Reserve space */
+        }
+        #submission-status {
+             margin-top: 20px;
+             font-weight: bold;
+             min-height: 1.2em;
+         }
+        .submission-success { color: var(--success-color); }
+        .submission-error { color: #dc3545; }
+
+
+        /* Download Button */
+        #download-btn {
+            background-color: var(--secondary-color);
+        }
+        #download-btn:hover:not(:disabled) {
+             background-color: #5a6268;
+         }
+
+    </style>
+</head>
+<body>
+    <!-- Main Container for Centering and Styling -->
+    <div class="container">
+
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="screen">
+            <h1>Face Recognition Survey</h1>
+            <p>Welcome! This survey investigates how people recognize faces presented normally and upside-down.</p>
+            <p>The survey consists of two main parts:</p>
+            <ol>
+                <li>Upright face recognition</li>
+                <li>Inverted (upside-down) face recognition</li>
+            </ol>
+            <p>In each part, you will first study a set of faces, then complete several recognition trials where you must identify a studied face from a group.</p>
+
+            <div id="participant-info">
+                <h3>Your Information</h3>
+                 <div class="form-group">
+                    <label for="participant-id">Participant ID (please keep the generated ID or enter one):</label>
+                    <input type="text" id="participant-id" value="">
+                </div>
+
+                <div class="form-group">
+                    <label for="gender-select">Gender:</label>
+                    <select id="gender-select">
+                        <option value="" disabled selected>-- Please choose an option --</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="start-btn">Start Survey</button>
+            <p id="validation-message"></p>
+        </div>
+
+        <!-- Training Screen -->
+        <div id="training-screen" class="screen hidden">
+            <h2 id="training-title">Study These Faces</h2>
+            <p id="training-instructions">Carefully observe the faces below. They will be shown for <span id="training-duration-display"></span> seconds.</p>
+            <div id="timer" class="timer"></div>
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="training-faces" class="face-container">
+                <!-- Faces loaded by JS -->
+            </div>
+        </div>
+
+        <!-- Recognition Screen -->
+        <div id="recognition-screen" class="screen hidden">
+            <h2 id="recognition-title">Identify the Studied Face</h2>
+            <p>Which one of these faces did you see during the study phase?</p>
+            <div id="recognition-faces" class="face-container">
+                 <!-- Faces loaded by JS -->
+            </div>
+            <button id="confirm-btn" disabled>Confirm Selection</button>
+        </div>
+
+        <!-- Phase Transition Screen -->
+        <div id="phase-transition" class="screen hidden">
+            <h2>Part 1 Complete!</h2>
+            <p>Great work! You've finished the upright face recognition task.</p>
+            <p>Now, let's move on to the second part with inverted (upside-down) faces.</p>
+            <button id="continue-btn">Continue to Part 2</button>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen hidden">
+            <h2>Survey Complete!</h2>
+            <p>Thank you very much for your participation.</p>
+            <p>Your results are being submitted automatically. Here is a summary:</p>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>Condition</th>
+                        <th>Accuracy</th>
+                        <th>Average Response Time (ms)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Upright Faces</td>
+                        <td id="upright-accuracy">-</td>
+                        <td id="upright-rt">-</td>
+                    </tr>
+                    <tr>
+                        <td>Inverted Faces</td>
+                        <td id="inverted-accuracy">-</td>
+                        <td id="inverted-rt">-</td>
+                    </tr>
+                </tbody>
+            </table>
+             <p id="submission-status"></p> <!-- For Submission Feedback -->
+            <p>As a backup, you can also download your full results:</p>
+            <button id="download-btn">Download Results (CSV)</button>
+            <!-- Removed the instruction to send the CSV -->
+        </div>
+
+    </div> <!-- End .container -->
+
+
+    <script>
+        // --- CONFIGURATION ---
+        // IMPORTANT: Replace with your actual FormSubmit.co URL (or other service endpoint)
+        const SUBMISSION_URL = 'https://formspree.io/f/xdkgoqdq';// <<<<<<<<<<< REPLACE THIS
+
+        const config = {
+            trainingFacesPerBatch: 4,
+            trainingBatches: 2,
+            trainingDuration: 10, // seconds
+            recognitionTrials: 4,
+            optionsPerTrial: 5,
+            conditions: ['upright', 'inverted'],
+            imagePaths: {
+                upright: './upright/',
+                inverted: './inverted/'
+            },
+             imageFilenames: {
+                 upright: [ 'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png', 'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png', 'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png', 'face31.png', 'face32.png' ],
+                 inverted: [ 'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png', 'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png', 'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png', 'face31.png', 'face32.png' ]
+             }
+        };
+
+        // --- STATE ---
+        const state = {
+            participantId: '',
+            gender: '',
+            currentCondition: '',
+            currentBatch: 0,
+            currentTrial: 0,
+            images: { upright: [], inverted: [] },
+            conditionTrainingFaces: [],
+            conditionDistractorFaces: [],
+            trialTargets: [],
+            trialOptions: [],
+            selectedFaceIndex: null,
+            results: {
+                upright: { accuracy: undefined, averageRT: undefined, responseTimes: [], trialData: [] },
+                inverted: { accuracy: undefined, averageRT: undefined, responseTimes: [], trialData: [] }
+            },
+            trialStartTime: 0,
+            trainingTimerInterval: null,
+            submissionAttempted: false // Flag to prevent multiple submissions
+        };
+
+        // --- ELEMENTS ---
+        const elements = {
+            container: document.querySelector('.container'), // Reference to main container
+            introScreen: document.getElementById('intro-screen'),
+            trainingScreen: document.getElementById('training-screen'),
+            recognitionScreen: document.getElementById('recognition-screen'),
+            phaseTransition: document.getElementById('phase-transition'),
+            resultsScreen: document.getElementById('results-screen'),
+            startBtn: document.getElementById('start-btn'),
+            continueBtn: document.getElementById('continue-btn'),
+            confirmBtn: document.getElementById('confirm-btn'),
+            downloadBtn: document.getElementById('download-btn'),
+            trainingTitle: document.getElementById('training-title'),
+            recognitionTitle: document.getElementById('recognition-title'),
+            trainingFaces: document.getElementById('training-faces'),
+            recognitionFaces: document.getElementById('recognition-faces'),
+            timer: document.getElementById('timer'),
+            progressBar: document.getElementById('progress-bar'),
+            trainingDurationDisplay: document.getElementById('training-duration-display'),
+            participantIdInput: document.getElementById('participant-id'),
+            genderSelect: document.getElementById('gender-select'),
+            validationMessage: document.getElementById('validation-message'),
+            uprightAccuracy: document.getElementById('upright-accuracy'),
+            uprightRT: document.getElementById('upright-rt'),
+            invertedAccuracy: document.getElementById('inverted-accuracy'),
+            invertedRT: document.getElementById('inverted-rt'),
+            submissionStatus: document.getElementById('submission-status') // Added element
+        };
+
+        // --- INITIALIZATION ---
+        elements.participantIdInput.value = 'P' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+        elements.trainingDurationDisplay.textContent = config.trainingDuration;
+        window.addEventListener('DOMContentLoaded', () => {
+            loadConditionImages('upright');
+            loadConditionImages('inverted');
+        });
+
+        // --- IMAGE LOADING ---
+        function loadConditionImages(condition) {
+            // (Code identical to previous version - kept for brevity)
+            const basePath = config.imagePaths[condition];
+            const filenames = config.imageFilenames[condition];
+            if (!filenames || filenames.length === 0) { console.error(`Error: No image filenames defined for condition "${condition}" in config.`); alert(`Configuration Error: Missing image filenames for ${condition} faces.`); return; }
+            const minImagesNeeded = (config.trainingFacesPerBatch * config.trainingBatches) + (config.recognitionTrials * (config.optionsPerTrial - 1));
+            if (filenames.length < minImagesNeeded) { console.warn(`Warning: Condition "${condition}" has ${filenames.length} images, but ${minImagesNeeded} are recommended for unique distractors across all trials.`); }
+            state.images[condition] = filenames.map(filename => ({ url: basePath + filename, filename: filename }));
+        }
+
+        // --- UTILITY FUNCTIONS ---
+        function showScreen(screenId) {
+             // Hide all screens within the container first
+            const screens = elements.container.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.add('hidden'));
+
+             // Show the target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                 targetScreen.classList.remove('hidden');
+            } else {
+                console.error("Screen not found:", screenId);
+            }
+        }
+
+        function shuffleArray(array) {
+            // (Code identical to previous version)
+            const newArray = [...array]; for (let i = newArray.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[newArray[i], newArray[j]] = [newArray[j], newArray[i]]; } return newArray;
+        }
+
+        function createFaceElement(faceData, index = -1) {
+            // (Code identical to previous version, including alt text and onerror)
+            const faceDiv = document.createElement('div'); faceDiv.className = 'face'; if (index !== -1) { faceDiv.dataset.index = index; } faceDiv.dataset.filename = faceData.filename; const img = document.createElement('img'); img.src = faceData.url; img.alt = `Face ${faceData.filename}`; img.onerror = function() { console.error(`Failed to load image: ${this.src}`); this.alt = `Error loading ${faceData.filename}`; this.style.backgroundColor = '#eee'; /* Simple visual indicator */ }; faceDiv.appendChild(img); return faceDiv;
+        }
+
+        // --- CORE SURVEY LOGIC ---
+        // setupConditionFaces, startTraining, prepareRecognitionPhase,
+        // startRecognitionTrial, confirmSelection, startNextPhase
+        // (These functions are IDENTICAL to the previous version - kept for brevity)
+         function setupConditionFaces() { /* ... Same code ... */ console.log(`Setting up faces for condition: ${state.currentCondition}`); const allConditionImages = state.images[state.currentCondition]; if (!allConditionImages || allConditionImages.length === 0) { console.error(`No images loaded for condition: ${state.currentCondition}`); alert(`Error: Could not find images for the ${state.currentCondition} condition.`); return false; } const shuffledAll = shuffleArray(allConditionImages); const numTrainingFaces = config.trainingFacesPerBatch * config.trainingBatches; state.conditionTrainingFaces = shuffledAll.slice(0, numTrainingFaces); state.conditionDistractorFaces = shuffledAll.slice(numTrainingFaces); console.log(`Selected ${state.conditionTrainingFaces.length} training faces.`); console.log(`Available ${state.conditionDistractorFaces.length} distractor faces.`); if (state.conditionTrainingFaces.length < numTrainingFaces) { console.error(`Error: Not enough unique images for training in condition ${state.currentCondition}.`); alert(`Error: Not enough unique images for the training phase.`); return false; } if (state.conditionDistractorFaces.length < (config.optionsPerTrial - 1)) { console.error(`Error: Not enough unique images for distractors in condition ${state.currentCondition}.`); /*alert(`Error: Not enough unique images to use as distractors.`);*/ return false; } return true; }
+         function startTraining() { /* ... Same code ... */ elements.trainingFaces.innerHTML = ''; elements.progressBar.style.width = '0%'; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.trainingTitle.textContent = `Training: Study ${conditionName} Faces`; const startIdx = state.currentBatch * config.trainingFacesPerBatch; const endIdx = startIdx + config.trainingFacesPerBatch; const batchFaces = state.conditionTrainingFaces.slice(startIdx, endIdx); console.log(`Training Batch ${state.currentBatch + 1}/${config.trainingBatches}, Faces:`, batchFaces.map(f => f.filename)); batchFaces.forEach((faceData) => { const faceElement = createFaceElement(faceData); elements.trainingFaces.appendChild(faceElement); }); let timeLeft = config.trainingDuration; elements.timer.textContent = timeLeft; if (state.trainingTimerInterval) { clearInterval(state.trainingTimerInterval); } state.trainingTimerInterval = setInterval(() => { timeLeft--; elements.timer.textContent = timeLeft; elements.progressBar.style.width = `${(1 - timeLeft / config.trainingDuration) * 100}%`; if (timeLeft <= 0) { clearInterval(state.trainingTimerInterval); state.trainingTimerInterval = null; if (state.currentBatch < config.trainingBatches - 1) { state.currentBatch++; startTraining(); } else { console.log("Training complete for condition:", state.currentCondition); prepareRecognitionPhase(); startRecognitionTrial(); } } }, 1000); }
+         function prepareRecognitionPhase() { /* ... Same code ... */ console.log("Preparing recognition phase for:", state.currentCondition); state.trialTargets = shuffleArray(state.conditionTrainingFaces).slice(0, config.recognitionTrials); if (state.trialTargets.length < config.recognitionTrials) { console.warn(`Warning: Not enough unique training faces to serve as targets for all trials.`); while (state.trialTargets.length < config.recognitionTrials && state.conditionTrainingFaces.length > 0) { state.trialTargets.push(state.conditionTrainingFaces[Math.floor(Math.random()*state.conditionTrainingFaces.length)]); } } console.log("Target faces for trials:", state.trialTargets.map(f => f.filename)); state.currentTrial = 0; }
+         function startRecognitionTrial() { /* ... Same code ... */ elements.recognitionFaces.innerHTML = ''; elements.confirmBtn.disabled = true; state.selectedFaceIndex = null; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.recognitionTitle.textContent = `Trial ${state.currentTrial + 1}/${config.recognitionTrials}: Which ${conditionName} face did you study?`; showScreen('recognition-screen'); const correctFace = state.trialTargets[state.currentTrial]; if (!correctFace) { console.error(`Error: Could not get target face for trial ${state.currentTrial}.`); alert("An error occurred setting up the trial."); return; } console.log(`Recognition Trial ${state.currentTrial + 1}: Target = ${correctFace.filename}`); const numDistractorsNeeded = config.optionsPerTrial - 1; let distractors = []; let potentialDistractors = shuffleArray(state.conditionDistractorFaces.filter(face => face.filename !== correctFace.filename)); if (potentialDistractors.length < numDistractorsNeeded) { console.warn(`Warning: Not enough unique distractors for trial ${state.currentTrial + 1}.`); distractors = potentialDistractors.slice(0, numDistractorsNeeded); } else { distractors = potentialDistractors.slice(0, numDistractorsNeeded); } console.log("Distractors:", distractors.map(f => f.filename)); state.trialOptions = shuffleArray([correctFace, ...distractors]); state.trialOptions.forEach((faceData, i) => { const faceElement = createFaceElement(faceData, i); faceElement.addEventListener('click', () => { document.querySelectorAll('#recognition-faces .face.selected').forEach(el => el.classList.remove('selected')); faceElement.classList.add('selected'); state.selectedFaceIndex = i; elements.confirmBtn.disabled = false; }); elements.recognitionFaces.appendChild(faceElement); }); state.trialStartTime = performance.now(); }
+         function confirmSelection() { /* ... Same code ... */ if (state.selectedFaceIndex === null) return; const responseTime = performance.now() - state.trialStartTime; const selectedFaceData = state.trialOptions[state.selectedFaceIndex]; const correctFaceData = state.trialTargets[state.currentTrial]; const isCorrect = selectedFaceData.filename === correctFaceData.filename; console.log(`Trial ${state.currentTrial + 1} Result: Selected=${selectedFaceData.filename}, Correct=${correctFaceData.filename}, Correct?=${isCorrect}, RT=${responseTime.toFixed(0)}ms`); state.results[state.currentCondition].trialData.push({ trial: state.currentTrial + 1, targetFilename: correctFaceData.filename, selectedFilename: selectedFaceData.filename, correct: isCorrect, responseTime: responseTime }); state.results[state.currentCondition].responseTimes.push(responseTime); state.currentTrial++; if (state.currentTrial < config.recognitionTrials) { startRecognitionTrial(); } else { console.log(`Recognition phase complete for condition: ${state.currentCondition}`); if (state.currentCondition === 'upright') { showScreen('phase-transition'); } else { calculateResults(); showResults(); /* Submit results automatically */ submitResultsViaEndpoint(); } } }
+         function startNextPhase() { /* ... Same code ... */ state.currentCondition = 'inverted'; state.currentBatch = 0; state.currentTrial = 0; if (!setupConditionFaces()) { console.error("Failed to set up faces for the inverted condition."); alert("A critical error occurred setting up the next part."); showScreen('intro-screen'); return; } showScreen('training-screen'); startTraining(); }
+
+
+        // --- RESULTS & SUBMISSION ---
+
+        function calculateResults() {
+            console.log("Calculating final results...");
+            ['upright', 'inverted'].forEach(condition => {
+                const conditionResults = state.results[condition];
+                const trials = conditionResults.trialData;
+                const numTrials = trials.length;
+
+                if (numTrials > 0) {
+                    const correctCount = trials.filter(trial => trial.correct).length;
+                    conditionResults.accuracy = (correctCount / numTrials) * 100;
+                    const totalRT = conditionResults.responseTimes.reduce((sum, time) => sum + time, 0);
+                    conditionResults.averageRT = totalRT / numTrials;
+                } else {
+                    conditionResults.accuracy = 0; // Default if no trials
+                    conditionResults.averageRT = 0;
+                }
+
+                console.log(`${condition}: Accuracy = ${conditionResults.accuracy?.toFixed(1)}%, Avg RT = ${conditionResults.averageRT?.toFixed(0)}ms`);
+
+                // Update the summary table display elements
+                const accuracyElement = elements[`${condition}Accuracy`];
+                const rtElement = elements[`${condition}RT`];
+
+                if (accuracyElement) accuracyElement.textContent = numTrials > 0 ? conditionResults.accuracy.toFixed(1) + '%' : 'N/A';
+                if (rtElement) rtElement.textContent = numTrials > 0 ? conditionResults.averageRT.toFixed(0) : 'N/A';
+            });
+        }
+
+        function showResults() {
+            showScreen('results-screen');
+            // Submission is triggered automatically after this in confirmSelection or here
+        }
+
+        function prepareSubmissionData() {
+             // Structure data for submission
+             const dataToSend = {
+                 participantId: state.participantId,
+                 gender: state.gender,
+                 submissionTimestamp: new Date().toISOString(),
+                 config: { // Include key config for context
+                     trainingDuration: config.trainingDuration,
+                     trainingFacesPerBatch: config.trainingFacesPerBatch,
+                     trainingBatches: config.trainingBatches,
+                     recognitionTrials: config.recognitionTrials,
+                     optionsPerTrial: config.optionsPerTrial
+                 },
+                 resultsSummary: {
+                     upright: {
+                         accuracyPercent: state.results.upright.accuracy?.toFixed(1),
+                         averageRtMs: state.results.upright.averageRT?.toFixed(0)
+                     },
+                     inverted: {
+                         accuracyPercent: state.results.inverted.accuracy?.toFixed(1),
+                         averageRtMs: state.results.inverted.averageRT?.toFixed(0)
+                     }
+                 },
+                 // Send detailed trial data as a string to avoid issues with nested objects in simple form submissions
+                 detailedResultsUpright: JSON.stringify(state.results.upright.trialData),
+                 detailedResultsInverted: JSON.stringify(state.results.inverted.trialData),
+                 // For FormSubmit.co: Add hidden fields if needed (like _subject)
+                 _subject: `Face Survey Result - ${state.participantId}`,
+                 // _captcha: "false" // Optional: disable captcha if testing heavily (REMOVE for production)
+             };
+             return dataToSend;
+        }
+
+        async function submitResultsViaEndpoint() {
+            if (state.submissionAttempted) {
+                 console.log("Submission already attempted.");
+                 return;
+            }
+            state.submissionAttempted = true; // Set flag
+
+            // Basic check for placeholder URL
+             if (!SUBMISSION_URL || SUBMISSION_URL.includes('your_actual_email')) {
+                 console.error("Submission URL is not configured. Skipping submission.");
+                 elements.submissionStatus.textContent = 'Automatic submission not configured.';
+                 elements.submissionStatus.className = 'submission-error';
+                 return;
+             }
+
+            const data = prepareSubmissionData();
+            console.log("Submitting data:", data);
+            elements.submissionStatus.textContent = 'Submitting results...';
+            elements.submissionStatus.className = ''; // Reset class
+
+            try {
+                const response = await fetch(SUBMISSION_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Send as JSON
+                        'Accept': 'application/json' // Expect JSON response from FormSubmit
+                    },
+                    body: JSON.stringify(data) // Convert JS object to JSON string
+                });
+
+                if (response.ok) {
+                    // const result = await response.json(); // FormSubmit might return JSON
+                    console.log('Submission successful:', response);
+                    elements.submissionStatus.textContent = 'Results submitted successfully!';
+                    elements.submissionStatus.className = 'submission-success';
+                } else {
+                    // Try to get error details, but response might not be JSON
+                     let errorText = `Submission failed. Status: ${response.status}`;
+                     try {
+                         const errorData = await response.json();
+                         errorText += ` - ${errorData.message || errorData.error || JSON.stringify(errorData)}`;
+                     } catch (e) {
+                         // Ignore if response body is not JSON
+                     }
+                    console.error('Submission failed:', response);
+                     elements.submissionStatus.textContent = `${errorText}. Please use the download button as a backup.`;
+                    elements.submissionStatus.className = 'submission-error';
+                }
+            } catch (error) {
+                console.error('Error submitting results:', error);
+                elements.submissionStatus.textContent = 'An error occurred during submission. Please use the download button.';
+                elements.submissionStatus.className = 'submission-error';
+            }
+        }
+
+
+        function generateCsvContent() {
+             // (Code identical to previous version, generating CSV rows)
+             const csvRows = [];
+             csvRows.push(['Face Recognition Survey Results']); csvRows.push(['Participant ID', state.participantId]); csvRows.push(['Gender', state.gender || 'Not Specified']); csvRows.push(['Survey Date', new Date().toISOString()]); csvRows.push(['']);
+             csvRows.push(['Summary Results']); csvRows.push(['Condition', 'Accuracy (%)', 'Average Response Time (ms)']); csvRows.push(['Upright', state.results.upright.accuracy !== undefined ? state.results.upright.accuracy.toFixed(1) : 'N/A', state.results.upright.averageRT !== undefined ? state.results.upright.averageRT.toFixed(0) : 'N/A']); csvRows.push(['Inverted', state.results.inverted.accuracy !== undefined ? state.results.inverted.accuracy.toFixed(1) : 'N/A', state.results.inverted.averageRT !== undefined ? state.results.inverted.averageRT.toFixed(0) : 'N/A']); csvRows.push(['']);
+             csvRows.push(['Detailed Trial Results']); csvRows.push(['Condition', 'Trial', 'Target Face', 'Selected Face', 'Correct', 'Response Time (ms)']);
+             ['upright', 'inverted'].forEach(condition => { const conditionTrials = state.results[condition].trialData; if (conditionTrials && conditionTrials.length > 0) { conditionTrials.forEach(trial => { csvRows.push([condition, trial.trial, trial.targetFilename, trial.selectedFilename, trial.correct ? 'Yes' : 'No', trial.responseTime.toFixed(0)]); }); } else { csvRows.push([condition, 'No trial data recorded', '', '', '', '']); } });
+             return csvRows.map(row => row.map(field => { const stringField = String(field); if (stringField.includes(',')) { return `"${stringField.replace(/"/g, '""')}"`; } return stringField; }).join(',')).join('\n');
+        }
+
+        function downloadResults() {
+            console.log("Preparing results for download...");
+            const csvContent = generateCsvContent();
+            console.log("CSV content generated for download.");
+
+            try {
+                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                 const url = URL.createObjectURL(blob);
+                 const link = document.createElement('a');
+                 link.setAttribute('href', url);
+                 const safeParticipantId = String(state.participantId).replace(/[^a-z0-9_-]/gi, '_');
+                 const timestamp = new Date().toISOString().split('T')[0];
+                 link.setAttribute('download', `face_survey_${safeParticipantId}_${timestamp}.csv`);
+                 link.style.visibility = 'hidden';
+                 document.body.appendChild(link);
+                 link.click();
+                 document.body.removeChild(link);
+                 URL.revokeObjectURL(url);
+                 console.log("Download initiated.");
+            } catch (e) {
+                 console.error("Error creating download link:", e);
+                 alert("Could not initiate download.");
+            }
+        }
+
+
+        // --- EVENT LISTENERS ---
+        elements.startBtn.addEventListener('click', () => {
+            // Validation
+            const participantId = elements.participantIdInput.value.trim();
+            const gender = elements.genderSelect.value;
+
+            elements.validationMessage.textContent = ''; // Clear previous messages
+            let isValid = true;
+
+            if (!participantId) {
+                elements.validationMessage.textContent = 'Please enter or confirm the Participant ID.';
+                elements.participantIdInput.focus();
+                isValid = false;
+            }
+            if (!gender && isValid) { // Only show gender error if ID is okay
+                 elements.validationMessage.textContent = 'Please select your gender.';
+                 elements.genderSelect.focus();
+                 isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Store participant info
+            state.participantId = participantId;
+            state.gender = gender;
+            state.submissionAttempted = false; // Reset submission flag for new start
+            elements.submissionStatus.textContent = ''; // Clear previous status
+
+             console.log(`Starting survey for Participant: ${state.participantId}, Gender: ${state.gender}`);
+
+            state.currentCondition = 'upright';
+            state.currentBatch = 0;
+            state.currentTrial = 0;
+
+            if (!setupConditionFaces()) {
+                 console.error("Failed to set up faces for the upright condition.");
+                 alert("A critical error occurred setting up the survey. Please check image configuration.");
+                 return;
+            }
+
+            showScreen('training-screen');
+            startTraining();
+        });
+
+        elements.confirmBtn.addEventListener('click', confirmSelection);
+        elements.continueBtn.addEventListener('click', startNextPhase);
+        elements.downloadBtn.addEventListener('click', downloadResults);
+
+    </script>
+
+</body>
+</html>
