@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,19 +8,25 @@
     <style>
         /* Basic Reset & Variables */
         :root {
-            --primary-color: #007bff; /* Blue */
-            --secondary-color: #6c757d; /* Gray */
-            --success-color: #28a745; /* Green */
+            --primary-color: #007bff;
+            /* Blue */
+            --secondary-color: #6c757d;
+            /* Gray */
+            --success-color: #28a745;
+            /* Green */
             --light-gray: #f8f9fa;
             --dark-gray: #343a40;
             --border-color: #dee2e6;
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             --container-max-width: 850px;
             --face-size: 150px;
-            --face-aspect-ratio: 1.33; /* height = width * aspect-ratio */
+            --face-aspect-ratio: 1.33;
+            /* height = width * aspect-ratio */
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -32,7 +39,8 @@
             line-height: 1.6;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align container to top */
+            align-items: flex-start;
+            /* Align container to top */
             min-height: 100vh;
             padding: 20px;
         }
@@ -46,7 +54,8 @@
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-            margin-top: 20px; /* Add some space from top */
+            margin-top: 20px;
+            /* Add some space from top */
         }
 
         /* Screen Sections */
@@ -55,8 +64,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .hidden {
@@ -75,7 +89,8 @@
             margin-bottom: 15px;
             font-size: 1.8em;
         }
-         h3 {
+
+        h3 {
             color: var(--secondary-color);
             margin-top: 25px;
             margin-bottom: 15px;
@@ -84,20 +99,25 @@
             padding-bottom: 5px;
         }
 
-        p, ol {
+        p,
+        ol {
             margin-bottom: 15px;
             color: #555;
             font-size: 1.05em;
         }
+
         ol {
             text-align: left;
-            display: inline-block; /* Center the list block */
-            padding-left: 50px; /* Indent list items */
+            display: inline-block;
+            /* Center the list block */
+            padding-left: 50px;
+            /* Indent list items */
             margin-left: auto;
             margin-right: auto;
-         }
+        }
+
         li {
-             margin-bottom: 8px;
+            margin-bottom: 8px;
         }
 
         /* Face Display */
@@ -105,17 +125,22 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 25px; /* Increased gap */
+            gap: 25px;
+            /* Increased gap */
             margin: 30px 0;
         }
 
         .face {
             width: var(--face-size);
             height: calc(var(--face-size) * var(--face-aspect-ratio));
-            border: 3px solid transparent; /* Slightly thicker border */
-            border-radius: 6px; /* Rounded corners */
-            overflow: hidden; /* Ensure image stays within border */
-            background-color: #eee; /* Placeholder bg */
+            border: 3px solid transparent;
+            /* Slightly thicker border */
+            border-radius: 6px;
+            /* Rounded corners */
+            overflow: hidden;
+            /* Ensure image stays within border */
+            background-color: #eee;
+            /* Placeholder bg */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
@@ -123,15 +148,21 @@
             cursor: pointer;
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease;
         }
+
         #recognition-faces .face:hover {
             border-color: var(--primary-color);
-            transform: translateY(-3px); /* Slight lift on hover */
+            transform: translateY(-3px);
+            /* Slight lift on hover */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
+
         #recognition-faces .face.selected {
-            border-color: var(--success-color); /* Use success color for selection */
-            box-shadow: 0 0 12px rgba(40, 167, 69, 0.5); /* Green shadow */
-            transform: scale(1.03); /* Slightly larger when selected */
+            border-color: var(--success-color);
+            /* Use success color for selection */
+            box-shadow: 0 0 12px rgba(40, 167, 69, 0.5);
+            /* Green shadow */
+            transform: scale(1.03);
+            /* Slightly larger when selected */
         }
 
         .face img {
@@ -154,18 +185,22 @@
             font-weight: bold;
             margin: 15px 5px;
             cursor: pointer;
-            border-radius: 25px; /* Pill shape */
+            border-radius: 25px;
+            /* Pill shape */
             transition: background-color 0.2s ease, transform 0.1s ease;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         button:hover:not(:disabled) {
-            background-color: #0056b3; /* Darker blue */
+            background-color: #0056b3;
+            /* Darker blue */
             transform: translateY(-1px);
         }
-         button:active:not(:disabled) {
-             transform: translateY(0px);
-             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-         }
+
+        button:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
 
         button:disabled {
             background-color: #cccccc;
@@ -180,17 +215,22 @@
             border-radius: 6px;
             overflow: hidden;
             margin: 20px auto;
-            max-width: 400px; /* Limit width */
+            max-width: 400px;
+            /* Limit width */
         }
+
         .progress-bar {
             height: 100%;
             background-color: var(--success-color);
             width: 0%;
-            transition: width 0.3s linear; /* Smoother transition */
+            transition: width 0.3s linear;
+            /* Smoother transition */
             border-radius: 6px;
         }
+
         .timer {
-            font-size: 2em; /* Larger timer */
+            font-size: 2em;
+            /* Larger timer */
             font-weight: bold;
             color: var(--primary-color);
             margin: 15px 0;
@@ -199,26 +239,34 @@
         /* Results Table */
         #results-table {
             width: 100%;
-            max-width: 600px; /* Limit width */
+            max-width: 600px;
+            /* Limit width */
             border-collapse: collapse;
             margin: 25px auto;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             border-radius: 6px;
-            overflow: hidden; /* Clip shadow */
+            overflow: hidden;
+            /* Clip shadow */
         }
-        #results-table th, #results-table td {
+
+        #results-table th,
+        #results-table td {
             border: 1px solid var(--border-color);
-            padding: 12px 15px; /* More padding */
+            padding: 12px 15px;
+            /* More padding */
             text-align: center;
         }
+
         #results-table th {
             background-color: var(--primary-color);
             color: white;
             font-weight: bold;
         }
-         #results-table tbody tr:nth-child(even) {
-             background-color: var(--light-gray);
-         }
+
+        #results-table tbody tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+
         #results-table td:first-child {
             font-weight: bold;
             text-align: left;
@@ -227,9 +275,12 @@
         /* Form Elements */
         .form-group {
             margin: 20px auto;
-            text-align: left; /* Labels left aligned */
-            max-width: 400px; /* Limit form width */
+            text-align: left;
+            /* Labels left aligned */
+            max-width: 400px;
+            /* Limit form width */
         }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
@@ -237,9 +288,11 @@
             color: #555;
             font-size: 1.05em;
         }
+
         .form-group input[type="text"],
         .form-group select {
-            padding: 12px 15px; /* More padding */
+            padding: 12px 15px;
+            /* More padding */
             width: 100%;
             border: 1px solid var(--border-color);
             border-radius: 4px;
@@ -247,12 +300,13 @@
             margin-top: 5px;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
-         .form-group input[type="text"]:focus,
-         .form-group select:focus {
+
+        .form-group input[type="text"]:focus,
+        .form-group select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
             outline: none;
-         }
+        }
 
         #participant-info {
             border-top: 1px solid var(--border-color);
@@ -262,30 +316,40 @@
 
         /* Validation & Status Messages */
         #validation-message {
-            color: #dc3545; /* Red */
+            color: #dc3545;
+            /* Red */
             font-weight: bold;
             margin-top: 15px;
-            min-height: 1.2em; /* Reserve space */
+            min-height: 1.2em;
+            /* Reserve space */
         }
+
         #submission-status {
-             margin-top: 20px;
-             font-weight: bold;
-             min-height: 1.2em;
-         }
-        .submission-success { color: var(--success-color); }
-        .submission-error { color: #dc3545; }
+            margin-top: 20px;
+            font-weight: bold;
+            min-height: 1.2em;
+        }
+
+        .submission-success {
+            color: var(--success-color);
+        }
+
+        .submission-error {
+            color: #dc3545;
+        }
 
 
         /* Download Button */
         #download-btn {
             background-color: var(--secondary-color);
         }
-        #download-btn:hover:not(:disabled) {
-             background-color: #5a6268;
-         }
 
+        #download-btn:hover:not(:disabled) {
+            background-color: #5a6268;
+        }
     </style>
 </head>
+
 <body>
     <!-- Main Container for Centering and Styling -->
     <div class="container">
@@ -299,11 +363,12 @@
                 <li>Upright face recognition</li>
                 <li>Inverted (upside-down) face recognition</li>
             </ol>
-            <p>In each part, you will first study a set of faces, then complete several recognition trials where you must identify a studied face from a group.</p>
+            <p>In each part, you will first study a set of faces, then complete several recognition trials where you
+                must identify a studied face from a group.</p>
 
             <div id="participant-info">
                 <h3>Your Information</h3>
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="participant-id">Participant ID (please keep the generated ID or enter one):</label>
                     <input type="text" id="participant-id" value="">
                 </div>
@@ -325,7 +390,8 @@
         <!-- Training Screen -->
         <div id="training-screen" class="screen hidden">
             <h2 id="training-title">Study These Faces</h2>
-            <p id="training-instructions">Carefully observe the faces below. They will be shown for <span id="training-duration-display"></span> seconds.</p>
+            <p id="training-instructions">Carefully observe the faces below. They will be shown for <span
+                    id="training-duration-display"></span> seconds.</p>
             <div id="timer" class="timer"></div>
             <div class="progress">
                 <div class="progress-bar" id="progress-bar"></div>
@@ -340,7 +406,7 @@
             <h2 id="recognition-title">Identify the Studied Face</h2>
             <p>Which one of these faces did you see during the study phase?</p>
             <div id="recognition-faces" class="face-container">
-                 <!-- Faces loaded by JS -->
+                <!-- Faces loaded by JS -->
             </div>
             <button id="confirm-btn" disabled>Confirm Selection</button>
         </div>
@@ -379,7 +445,7 @@
                     </tr>
                 </tbody>
             </table>
-             <p id="submission-status"></p> <!-- For Submission Feedback -->
+            <p id="submission-status"></p> <!-- For Submission Feedback -->
             <p>As a backup, you can also download your full results:</p>
             <button id="download-btn">Download Results (CSV)</button>
             <!-- Removed the instruction to send the CSV -->
@@ -404,10 +470,46 @@
                 upright: './upright/',
                 inverted: './inverted/'
             },
-             imageFilenames: {
-                 upright: [ 'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png', 'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png', 'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png', 'face31.png', 'face32.png' ],
-                 inverted: [ 'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png', 'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png', 'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png', 'face31.png', 'face32.png' ]
-             }
+            imageFilenames : {
+                upright: [
+                    'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png',
+                    'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png',
+                    'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png',
+                    'face31.png', 'face32.png', 'face33.png', 'face34.png', 'face35.png', 'face36.png', 'face37.png', 'face38.png', 'face39.png', 'face40.png',
+                    'face41.png', 'face42.png', 'face43.png', 'face44.png', 'face45.png', 'face46.png', 'face47.png', 'face48.png', 'face49.png', 'face50.png',
+                    'face51.png', 'face52.png', 'face53.png', 'face54.png', 'face55.png', 'face56.png', 'face57.png', 'face58.png', 'face59.png', 'face60.png',
+                    'face61.png', 'face62.png', 'face63.png', 'face64.png', 'face65.png', 'face66.png', 'face67.png', 'face68.png', 'face69.png', 'face70.png',
+                    'face71.png', 'face72.png', 'face73.png', 'face74.png', 'face75.png', 'face76.png', 'face77.png', 'face78.png', 'face79.png', 'face80.png',
+                    'face81.png', 'face82.png', 'face83.png', 'face84.png', 'face85.png', 'face86.png', 'face87.png', 'face88.png', 'face89.png', 'face90.png',
+                    'face91.png', 'face92.png', 'face93.png', 'face94.png', 'face95.png', 'face96.png', 'face97.png', 'face98.png', 'face99.png', 'face100.png',
+                    'face101.png', 'face102.png', 'face103.png', 'face104.png', 'face105.png', 'face106.png', 'face107.png', 'face108.png', 'face109.png', 'face110.png',
+                    'face111.png', 'face112.png', 'face113.png', 'face114.png', 'face115.png', 'face116.png', 'face117.png', 'face118.png', 'face119.png', 'face120.png',
+                    'face121.png', 'face122.png', 'face123.png', 'face124.png', 'face125.png', 'face126.png', 'face127.png', 'face128.png', 'face129.png', 'face130.png',
+                    'face131.png', 'face132.png', 'face133.png', 'face134.png', 'face135.png', 'face136.png', 'face137.png', 'face138.png', 'face139.png', 'face140.png',
+                    'face141.png', 'face142.png', 'face143.png', 'face144.png', 'face145.png', 'face146.png', 'face147.png', 'face148.png', 'face149.png', 'face150.png',
+                    'face151.png', 'face152.png', 'face153.png', 'face154.png', 'face155.png', 'face156.png', 'face157.png', 'face158.png', 'face159.png', 'face160.png',
+                    'face161.png', 'face162.png', 'face163.png', 'face164.png', 'face165.png', 'face166.png', 'face167.png', 'face168.png', 'face169.png', 'face170.png'
+                ],
+                inverted: [
+                    'face1.png', 'face2.png', 'face3.png', 'face4.png', 'face5.png', 'face6.png', 'face7.png', 'face8.png', 'face9.png', 'face10.png',
+                    'face11.png', 'face12.png', 'face13.png', 'face14.png', 'face15.png', 'face16.png', 'face17.png', 'face18.png', 'face19.png', 'face20.png',
+                    'face21.png', 'face22.png', 'face23.png', 'face24.png', 'face25.png', 'face26.png', 'face27.png', 'face28.png', 'face29.png', 'face30.png',
+                    'face31.png', 'face32.png', 'face33.png', 'face34.png', 'face35.png', 'face36.png', 'face37.png', 'face38.png', 'face39.png', 'face40.png',
+                    'face41.png', 'face42.png', 'face43.png', 'face44.png', 'face45.png', 'face46.png', 'face47.png', 'face48.png', 'face49.png', 'face50.png',
+                    'face51.png', 'face52.png', 'face53.png', 'face54.png', 'face55.png', 'face56.png', 'face57.png', 'face58.png', 'face59.png', 'face60.png',
+                    'face61.png', 'face62.png', 'face63.png', 'face64.png', 'face65.png', 'face66.png', 'face67.png', 'face68.png', 'face69.png', 'face70.png',
+                    'face71.png', 'face72.png', 'face73.png', 'face74.png', 'face75.png', 'face76.png', 'face77.png', 'face78.png', 'face79.png', 'face80.png',
+                    'face81.png', 'face82.png', 'face83.png', 'face84.png', 'face85.png', 'face86.png', 'face87.png', 'face88.png', 'face89.png', 'face90.png',
+                    'face91.png', 'face92.png', 'face93.png', 'face94.png', 'face95.png', 'face96.png', 'face97.png', 'face98.png', 'face99.png', 'face100.png',
+                    'face101.png', 'face102.png', 'face103.png', 'face104.png', 'face105.png', 'face106.png', 'face107.png', 'face108.png', 'face109.png', 'face110.png',
+                    'face111.png', 'face112.png', 'face113.png', 'face114.png', 'face115.png', 'face116.png', 'face117.png', 'face118.png', 'face119.png', 'face120.png',
+                    'face121.png', 'face122.png', 'face123.png', 'face124.png', 'face125.png', 'face126.png', 'face127.png', 'face128.png', 'face129.png', 'face130.png',
+                    'face131.png', 'face132.png', 'face133.png', 'face134.png', 'face135.png', 'face136.png', 'face137.png', 'face138.png', 'face139.png', 'face140.png',
+                    'face141.png', 'face142.png', 'face143.png', 'face144.png', 'face145.png', 'face146.png', 'face147.png', 'face148.png', 'face149.png', 'face150.png',
+                    'face151.png', 'face152.png', 'face153.png', 'face154.png', 'face155.png', 'face156.png', 'face157.png', 'face158.png', 'face159.png', 'face160.png',
+                    'face161.png', 'face162.png', 'face163.png', 'face164.png', 'face165.png', 'face166.png', 'face167.png', 'face168.png', 'face169.png', 'face170.png'
+                ]
+            }
         };
 
         // --- STATE ---
@@ -482,14 +584,14 @@
 
         // --- UTILITY FUNCTIONS ---
         function showScreen(screenId) {
-             // Hide all screens within the container first
+            // Hide all screens within the container first
             const screens = elements.container.querySelectorAll('.screen');
             screens.forEach(screen => screen.classList.add('hidden'));
 
-             // Show the target screen
+            // Show the target screen
             const targetScreen = document.getElementById(screenId);
             if (targetScreen) {
-                 targetScreen.classList.remove('hidden');
+                targetScreen.classList.remove('hidden');
             } else {
                 console.error("Screen not found:", screenId);
             }
@@ -502,19 +604,19 @@
 
         function createFaceElement(faceData, index = -1) {
             // (Code identical to previous version, including alt text and onerror)
-            const faceDiv = document.createElement('div'); faceDiv.className = 'face'; if (index !== -1) { faceDiv.dataset.index = index; } faceDiv.dataset.filename = faceData.filename; const img = document.createElement('img'); img.src = faceData.url; img.alt = `Face ${faceData.filename}`; img.onerror = function() { console.error(`Failed to load image: ${this.src}`); this.alt = `Error loading ${faceData.filename}`; this.style.backgroundColor = '#eee'; /* Simple visual indicator */ }; faceDiv.appendChild(img); return faceDiv;
+            const faceDiv = document.createElement('div'); faceDiv.className = 'face'; if (index !== -1) { faceDiv.dataset.index = index; } faceDiv.dataset.filename = faceData.filename; const img = document.createElement('img'); img.src = faceData.url; img.alt = `Face ${faceData.filename}`; img.onerror = function () { console.error(`Failed to load image: ${this.src}`); this.alt = `Error loading ${faceData.filename}`; this.style.backgroundColor = '#eee'; /* Simple visual indicator */ }; faceDiv.appendChild(img); return faceDiv;
         }
 
         // --- CORE SURVEY LOGIC ---
         // setupConditionFaces, startTraining, prepareRecognitionPhase,
         // startRecognitionTrial, confirmSelection, startNextPhase
         // (These functions are IDENTICAL to the previous version - kept for brevity)
-         function setupConditionFaces() { /* ... Same code ... */ console.log(`Setting up faces for condition: ${state.currentCondition}`); const allConditionImages = state.images[state.currentCondition]; if (!allConditionImages || allConditionImages.length === 0) { console.error(`No images loaded for condition: ${state.currentCondition}`); alert(`Error: Could not find images for the ${state.currentCondition} condition.`); return false; } const shuffledAll = shuffleArray(allConditionImages); const numTrainingFaces = config.trainingFacesPerBatch * config.trainingBatches; state.conditionTrainingFaces = shuffledAll.slice(0, numTrainingFaces); state.conditionDistractorFaces = shuffledAll.slice(numTrainingFaces); console.log(`Selected ${state.conditionTrainingFaces.length} training faces.`); console.log(`Available ${state.conditionDistractorFaces.length} distractor faces.`); if (state.conditionTrainingFaces.length < numTrainingFaces) { console.error(`Error: Not enough unique images for training in condition ${state.currentCondition}.`); alert(`Error: Not enough unique images for the training phase.`); return false; } if (state.conditionDistractorFaces.length < (config.optionsPerTrial - 1)) { console.error(`Error: Not enough unique images for distractors in condition ${state.currentCondition}.`); /*alert(`Error: Not enough unique images to use as distractors.`);*/ return false; } return true; }
-         function startTraining() { /* ... Same code ... */ elements.trainingFaces.innerHTML = ''; elements.progressBar.style.width = '0%'; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.trainingTitle.textContent = `Training: Study ${conditionName} Faces`; const startIdx = state.currentBatch * config.trainingFacesPerBatch; const endIdx = startIdx + config.trainingFacesPerBatch; const batchFaces = state.conditionTrainingFaces.slice(startIdx, endIdx); console.log(`Training Batch ${state.currentBatch + 1}/${config.trainingBatches}, Faces:`, batchFaces.map(f => f.filename)); batchFaces.forEach((faceData) => { const faceElement = createFaceElement(faceData); elements.trainingFaces.appendChild(faceElement); }); let timeLeft = config.trainingDuration; elements.timer.textContent = timeLeft; if (state.trainingTimerInterval) { clearInterval(state.trainingTimerInterval); } state.trainingTimerInterval = setInterval(() => { timeLeft--; elements.timer.textContent = timeLeft; elements.progressBar.style.width = `${(1 - timeLeft / config.trainingDuration) * 100}%`; if (timeLeft <= 0) { clearInterval(state.trainingTimerInterval); state.trainingTimerInterval = null; if (state.currentBatch < config.trainingBatches - 1) { state.currentBatch++; startTraining(); } else { console.log("Training complete for condition:", state.currentCondition); prepareRecognitionPhase(); startRecognitionTrial(); } } }, 1000); }
-         function prepareRecognitionPhase() { /* ... Same code ... */ console.log("Preparing recognition phase for:", state.currentCondition); state.trialTargets = shuffleArray(state.conditionTrainingFaces).slice(0, config.recognitionTrials); if (state.trialTargets.length < config.recognitionTrials) { console.warn(`Warning: Not enough unique training faces to serve as targets for all trials.`); while (state.trialTargets.length < config.recognitionTrials && state.conditionTrainingFaces.length > 0) { state.trialTargets.push(state.conditionTrainingFaces[Math.floor(Math.random()*state.conditionTrainingFaces.length)]); } } console.log("Target faces for trials:", state.trialTargets.map(f => f.filename)); state.currentTrial = 0; }
-         function startRecognitionTrial() { /* ... Same code ... */ elements.recognitionFaces.innerHTML = ''; elements.confirmBtn.disabled = true; state.selectedFaceIndex = null; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.recognitionTitle.textContent = `Trial ${state.currentTrial + 1}/${config.recognitionTrials}: Which ${conditionName} face did you study?`; showScreen('recognition-screen'); const correctFace = state.trialTargets[state.currentTrial]; if (!correctFace) { console.error(`Error: Could not get target face for trial ${state.currentTrial}.`); alert("An error occurred setting up the trial."); return; } console.log(`Recognition Trial ${state.currentTrial + 1}: Target = ${correctFace.filename}`); const numDistractorsNeeded = config.optionsPerTrial - 1; let distractors = []; let potentialDistractors = shuffleArray(state.conditionDistractorFaces.filter(face => face.filename !== correctFace.filename)); if (potentialDistractors.length < numDistractorsNeeded) { console.warn(`Warning: Not enough unique distractors for trial ${state.currentTrial + 1}.`); distractors = potentialDistractors.slice(0, numDistractorsNeeded); } else { distractors = potentialDistractors.slice(0, numDistractorsNeeded); } console.log("Distractors:", distractors.map(f => f.filename)); state.trialOptions = shuffleArray([correctFace, ...distractors]); state.trialOptions.forEach((faceData, i) => { const faceElement = createFaceElement(faceData, i); faceElement.addEventListener('click', () => { document.querySelectorAll('#recognition-faces .face.selected').forEach(el => el.classList.remove('selected')); faceElement.classList.add('selected'); state.selectedFaceIndex = i; elements.confirmBtn.disabled = false; }); elements.recognitionFaces.appendChild(faceElement); }); state.trialStartTime = performance.now(); }
-         function confirmSelection() { /* ... Same code ... */ if (state.selectedFaceIndex === null) return; const responseTime = performance.now() - state.trialStartTime; const selectedFaceData = state.trialOptions[state.selectedFaceIndex]; const correctFaceData = state.trialTargets[state.currentTrial]; const isCorrect = selectedFaceData.filename === correctFaceData.filename; console.log(`Trial ${state.currentTrial + 1} Result: Selected=${selectedFaceData.filename}, Correct=${correctFaceData.filename}, Correct?=${isCorrect}, RT=${responseTime.toFixed(0)}ms`); state.results[state.currentCondition].trialData.push({ trial: state.currentTrial + 1, targetFilename: correctFaceData.filename, selectedFilename: selectedFaceData.filename, correct: isCorrect, responseTime: responseTime }); state.results[state.currentCondition].responseTimes.push(responseTime); state.currentTrial++; if (state.currentTrial < config.recognitionTrials) { startRecognitionTrial(); } else { console.log(`Recognition phase complete for condition: ${state.currentCondition}`); if (state.currentCondition === 'upright') { showScreen('phase-transition'); } else { calculateResults(); showResults(); /* Submit results automatically */ submitResultsViaEndpoint(); } } }
-         function startNextPhase() { /* ... Same code ... */ state.currentCondition = 'inverted'; state.currentBatch = 0; state.currentTrial = 0; if (!setupConditionFaces()) { console.error("Failed to set up faces for the inverted condition."); alert("A critical error occurred setting up the next part."); showScreen('intro-screen'); return; } showScreen('training-screen'); startTraining(); }
+        function setupConditionFaces() { /* ... Same code ... */ console.log(`Setting up faces for condition: ${state.currentCondition}`); const allConditionImages = state.images[state.currentCondition]; if (!allConditionImages || allConditionImages.length === 0) { console.error(`No images loaded for condition: ${state.currentCondition}`); alert(`Error: Could not find images for the ${state.currentCondition} condition.`); return false; } const shuffledAll = shuffleArray(allConditionImages); const numTrainingFaces = config.trainingFacesPerBatch * config.trainingBatches; state.conditionTrainingFaces = shuffledAll.slice(0, numTrainingFaces); state.conditionDistractorFaces = shuffledAll.slice(numTrainingFaces); console.log(`Selected ${state.conditionTrainingFaces.length} training faces.`); console.log(`Available ${state.conditionDistractorFaces.length} distractor faces.`); if (state.conditionTrainingFaces.length < numTrainingFaces) { console.error(`Error: Not enough unique images for training in condition ${state.currentCondition}.`); alert(`Error: Not enough unique images for the training phase.`); return false; } if (state.conditionDistractorFaces.length < (config.optionsPerTrial - 1)) { console.error(`Error: Not enough unique images for distractors in condition ${state.currentCondition}.`); /*alert(`Error: Not enough unique images to use as distractors.`);*/ return false; } return true; }
+        function startTraining() { /* ... Same code ... */ elements.trainingFaces.innerHTML = ''; elements.progressBar.style.width = '0%'; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.trainingTitle.textContent = `Training: Study ${conditionName} Faces`; const startIdx = state.currentBatch * config.trainingFacesPerBatch; const endIdx = startIdx + config.trainingFacesPerBatch; const batchFaces = state.conditionTrainingFaces.slice(startIdx, endIdx); console.log(`Training Batch ${state.currentBatch + 1}/${config.trainingBatches}, Faces:`, batchFaces.map(f => f.filename)); batchFaces.forEach((faceData) => { const faceElement = createFaceElement(faceData); elements.trainingFaces.appendChild(faceElement); }); let timeLeft = config.trainingDuration; elements.timer.textContent = timeLeft; if (state.trainingTimerInterval) { clearInterval(state.trainingTimerInterval); } state.trainingTimerInterval = setInterval(() => { timeLeft--; elements.timer.textContent = timeLeft; elements.progressBar.style.width = `${(1 - timeLeft / config.trainingDuration) * 100}%`; if (timeLeft <= 0) { clearInterval(state.trainingTimerInterval); state.trainingTimerInterval = null; if (state.currentBatch < config.trainingBatches - 1) { state.currentBatch++; startTraining(); } else { console.log("Training complete for condition:", state.currentCondition); prepareRecognitionPhase(); startRecognitionTrial(); } } }, 1000); }
+        function prepareRecognitionPhase() { /* ... Same code ... */ console.log("Preparing recognition phase for:", state.currentCondition); state.trialTargets = shuffleArray(state.conditionTrainingFaces).slice(0, config.recognitionTrials); if (state.trialTargets.length < config.recognitionTrials) { console.warn(`Warning: Not enough unique training faces to serve as targets for all trials.`); while (state.trialTargets.length < config.recognitionTrials && state.conditionTrainingFaces.length > 0) { state.trialTargets.push(state.conditionTrainingFaces[Math.floor(Math.random() * state.conditionTrainingFaces.length)]); } } console.log("Target faces for trials:", state.trialTargets.map(f => f.filename)); state.currentTrial = 0; }
+        function startRecognitionTrial() { /* ... Same code ... */ elements.recognitionFaces.innerHTML = ''; elements.confirmBtn.disabled = true; state.selectedFaceIndex = null; const conditionName = state.currentCondition.charAt(0).toUpperCase() + state.currentCondition.slice(1); elements.recognitionTitle.textContent = `Trial ${state.currentTrial + 1}/${config.recognitionTrials}: Which ${conditionName} face did you study?`; showScreen('recognition-screen'); const correctFace = state.trialTargets[state.currentTrial]; if (!correctFace) { console.error(`Error: Could not get target face for trial ${state.currentTrial}.`); alert("An error occurred setting up the trial."); return; } console.log(`Recognition Trial ${state.currentTrial + 1}: Target = ${correctFace.filename}`); const numDistractorsNeeded = config.optionsPerTrial - 1; let distractors = []; let potentialDistractors = shuffleArray(state.conditionDistractorFaces.filter(face => face.filename !== correctFace.filename)); if (potentialDistractors.length < numDistractorsNeeded) { console.warn(`Warning: Not enough unique distractors for trial ${state.currentTrial + 1}.`); distractors = potentialDistractors.slice(0, numDistractorsNeeded); } else { distractors = potentialDistractors.slice(0, numDistractorsNeeded); } console.log("Distractors:", distractors.map(f => f.filename)); state.trialOptions = shuffleArray([correctFace, ...distractors]); state.trialOptions.forEach((faceData, i) => { const faceElement = createFaceElement(faceData, i); faceElement.addEventListener('click', () => { document.querySelectorAll('#recognition-faces .face.selected').forEach(el => el.classList.remove('selected')); faceElement.classList.add('selected'); state.selectedFaceIndex = i; elements.confirmBtn.disabled = false; }); elements.recognitionFaces.appendChild(faceElement); }); state.trialStartTime = performance.now(); }
+        function confirmSelection() { /* ... Same code ... */ if (state.selectedFaceIndex === null) return; const responseTime = performance.now() - state.trialStartTime; const selectedFaceData = state.trialOptions[state.selectedFaceIndex]; const correctFaceData = state.trialTargets[state.currentTrial]; const isCorrect = selectedFaceData.filename === correctFaceData.filename; console.log(`Trial ${state.currentTrial + 1} Result: Selected=${selectedFaceData.filename}, Correct=${correctFaceData.filename}, Correct?=${isCorrect}, RT=${responseTime.toFixed(0)}ms`); state.results[state.currentCondition].trialData.push({ trial: state.currentTrial + 1, targetFilename: correctFaceData.filename, selectedFilename: selectedFaceData.filename, correct: isCorrect, responseTime: responseTime }); state.results[state.currentCondition].responseTimes.push(responseTime); state.currentTrial++; if (state.currentTrial < config.recognitionTrials) { startRecognitionTrial(); } else { console.log(`Recognition phase complete for condition: ${state.currentCondition}`); if (state.currentCondition === 'upright') { showScreen('phase-transition'); } else { calculateResults(); showResults(); /* Submit results automatically */ submitResultsViaEndpoint(); } } }
+        function startNextPhase() { /* ... Same code ... */ state.currentCondition = 'inverted'; state.currentBatch = 0; state.currentTrial = 0; if (!setupConditionFaces()) { console.error("Failed to set up faces for the inverted condition."); alert("A critical error occurred setting up the next part."); showScreen('intro-screen'); return; } showScreen('training-screen'); startTraining(); }
 
 
         // --- RESULTS & SUBMISSION ---
@@ -553,52 +655,52 @@
         }
 
         function prepareSubmissionData() {
-             // Structure data for submission
-             const dataToSend = {
-                 participantId: state.participantId,
-                 gender: state.gender,
-                 submissionTimestamp: new Date().toISOString(),
-                 config: { // Include key config for context
-                     trainingDuration: config.trainingDuration,
-                     trainingFacesPerBatch: config.trainingFacesPerBatch,
-                     trainingBatches: config.trainingBatches,
-                     recognitionTrials: config.recognitionTrials,
-                     optionsPerTrial: config.optionsPerTrial
-                 },
-                 resultsSummary: {
-                     upright: {
-                         accuracyPercent: state.results.upright.accuracy?.toFixed(1),
-                         averageRtMs: state.results.upright.averageRT?.toFixed(0)
-                     },
-                     inverted: {
-                         accuracyPercent: state.results.inverted.accuracy?.toFixed(1),
-                         averageRtMs: state.results.inverted.averageRT?.toFixed(0)
-                     }
-                 },
-                 // Send detailed trial data as a string to avoid issues with nested objects in simple form submissions
-                 detailedResultsUpright: JSON.stringify(state.results.upright.trialData),
-                 detailedResultsInverted: JSON.stringify(state.results.inverted.trialData),
-                 // For FormSubmit.co: Add hidden fields if needed (like _subject)
-                 _subject: `Face Survey Result - ${state.participantId}`,
-                 // _captcha: "false" // Optional: disable captcha if testing heavily (REMOVE for production)
-             };
-             return dataToSend;
+            // Structure data for submission
+            const dataToSend = {
+                participantId: state.participantId,
+                gender: state.gender,
+                submissionTimestamp: new Date().toISOString(),
+                config: { // Include key config for context
+                    trainingDuration: config.trainingDuration,
+                    trainingFacesPerBatch: config.trainingFacesPerBatch,
+                    trainingBatches: config.trainingBatches,
+                    recognitionTrials: config.recognitionTrials,
+                    optionsPerTrial: config.optionsPerTrial
+                },
+                resultsSummary: {
+                    upright: {
+                        accuracyPercent: state.results.upright.accuracy?.toFixed(1),
+                        averageRtMs: state.results.upright.averageRT?.toFixed(0)
+                    },
+                    inverted: {
+                        accuracyPercent: state.results.inverted.accuracy?.toFixed(1),
+                        averageRtMs: state.results.inverted.averageRT?.toFixed(0)
+                    }
+                },
+                // Send detailed trial data as a string to avoid issues with nested objects in simple form submissions
+                detailedResultsUpright: JSON.stringify(state.results.upright.trialData),
+                detailedResultsInverted: JSON.stringify(state.results.inverted.trialData),
+                // For FormSubmit.co: Add hidden fields if needed (like _subject)
+                _subject: `Face Survey Result - ${state.participantId}`,
+                // _captcha: "false" // Optional: disable captcha if testing heavily (REMOVE for production)
+            };
+            return dataToSend;
         }
 
         async function submitResultsViaEndpoint() {
             if (state.submissionAttempted) {
-                 console.log("Submission already attempted.");
-                 return;
+                console.log("Submission already attempted.");
+                return;
             }
             state.submissionAttempted = true; // Set flag
 
             // Basic check for placeholder URL
-             if (!SUBMISSION_URL || SUBMISSION_URL.includes('your_actual_email')) {
-                 console.error("Submission URL is not configured. Skipping submission.");
-                 elements.submissionStatus.textContent = 'Automatic submission not configured.';
-                 elements.submissionStatus.className = 'submission-error';
-                 return;
-             }
+            if (!SUBMISSION_URL || SUBMISSION_URL.includes('your_actual_email')) {
+                console.error("Submission URL is not configured. Skipping submission.");
+                elements.submissionStatus.textContent = 'Automatic submission not configured.';
+                elements.submissionStatus.className = 'submission-error';
+                return;
+            }
 
             const data = prepareSubmissionData();
             console.log("Submitting data:", data);
@@ -622,15 +724,15 @@
                     elements.submissionStatus.className = 'submission-success';
                 } else {
                     // Try to get error details, but response might not be JSON
-                     let errorText = `Submission failed. Status: ${response.status}`;
-                     try {
-                         const errorData = await response.json();
-                         errorText += ` - ${errorData.message || errorData.error || JSON.stringify(errorData)}`;
-                     } catch (e) {
-                         // Ignore if response body is not JSON
-                     }
+                    let errorText = `Submission failed. Status: ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        errorText += ` - ${errorData.message || errorData.error || JSON.stringify(errorData)}`;
+                    } catch (e) {
+                        // Ignore if response body is not JSON
+                    }
                     console.error('Submission failed:', response);
-                     elements.submissionStatus.textContent = `${errorText}. Please use the download button as a backup.`;
+                    elements.submissionStatus.textContent = `${errorText}. Please use the download button as a backup.`;
                     elements.submissionStatus.className = 'submission-error';
                 }
             } catch (error) {
@@ -642,13 +744,13 @@
 
 
         function generateCsvContent() {
-             // (Code identical to previous version, generating CSV rows)
-             const csvRows = [];
-             csvRows.push(['Face Recognition Survey Results']); csvRows.push(['Participant ID', state.participantId]); csvRows.push(['Gender', state.gender || 'Not Specified']); csvRows.push(['Survey Date', new Date().toISOString()]); csvRows.push(['']);
-             csvRows.push(['Summary Results']); csvRows.push(['Condition', 'Accuracy (%)', 'Average Response Time (ms)']); csvRows.push(['Upright', state.results.upright.accuracy !== undefined ? state.results.upright.accuracy.toFixed(1) : 'N/A', state.results.upright.averageRT !== undefined ? state.results.upright.averageRT.toFixed(0) : 'N/A']); csvRows.push(['Inverted', state.results.inverted.accuracy !== undefined ? state.results.inverted.accuracy.toFixed(1) : 'N/A', state.results.inverted.averageRT !== undefined ? state.results.inverted.averageRT.toFixed(0) : 'N/A']); csvRows.push(['']);
-             csvRows.push(['Detailed Trial Results']); csvRows.push(['Condition', 'Trial', 'Target Face', 'Selected Face', 'Correct', 'Response Time (ms)']);
-             ['upright', 'inverted'].forEach(condition => { const conditionTrials = state.results[condition].trialData; if (conditionTrials && conditionTrials.length > 0) { conditionTrials.forEach(trial => { csvRows.push([condition, trial.trial, trial.targetFilename, trial.selectedFilename, trial.correct ? 'Yes' : 'No', trial.responseTime.toFixed(0)]); }); } else { csvRows.push([condition, 'No trial data recorded', '', '', '', '']); } });
-             return csvRows.map(row => row.map(field => { const stringField = String(field); if (stringField.includes(',')) { return `"${stringField.replace(/"/g, '""')}"`; } return stringField; }).join(',')).join('\n');
+            // (Code identical to previous version, generating CSV rows)
+            const csvRows = [];
+            csvRows.push(['Face Recognition Survey Results']); csvRows.push(['Participant ID', state.participantId]); csvRows.push(['Gender', state.gender || 'Not Specified']); csvRows.push(['Survey Date', new Date().toISOString()]); csvRows.push(['']);
+            csvRows.push(['Summary Results']); csvRows.push(['Condition', 'Accuracy (%)', 'Average Response Time (ms)']); csvRows.push(['Upright', state.results.upright.accuracy !== undefined ? state.results.upright.accuracy.toFixed(1) : 'N/A', state.results.upright.averageRT !== undefined ? state.results.upright.averageRT.toFixed(0) : 'N/A']); csvRows.push(['Inverted', state.results.inverted.accuracy !== undefined ? state.results.inverted.accuracy.toFixed(1) : 'N/A', state.results.inverted.averageRT !== undefined ? state.results.inverted.averageRT.toFixed(0) : 'N/A']); csvRows.push(['']);
+            csvRows.push(['Detailed Trial Results']); csvRows.push(['Condition', 'Trial', 'Target Face', 'Selected Face', 'Correct', 'Response Time (ms)']);
+            ['upright', 'inverted'].forEach(condition => { const conditionTrials = state.results[condition].trialData; if (conditionTrials && conditionTrials.length > 0) { conditionTrials.forEach(trial => { csvRows.push([condition, trial.trial, trial.targetFilename, trial.selectedFilename, trial.correct ? 'Yes' : 'No', trial.responseTime.toFixed(0)]); }); } else { csvRows.push([condition, 'No trial data recorded', '', '', '', '']); } });
+            return csvRows.map(row => row.map(field => { const stringField = String(field); if (stringField.includes(',')) { return `"${stringField.replace(/"/g, '""')}"`; } return stringField; }).join(',')).join('\n');
         }
 
         function downloadResults() {
@@ -657,22 +759,22 @@
             console.log("CSV content generated for download.");
 
             try {
-                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                 const url = URL.createObjectURL(blob);
-                 const link = document.createElement('a');
-                 link.setAttribute('href', url);
-                 const safeParticipantId = String(state.participantId).replace(/[^a-z0-9_-]/gi, '_');
-                 const timestamp = new Date().toISOString().split('T')[0];
-                 link.setAttribute('download', `face_survey_${safeParticipantId}_${timestamp}.csv`);
-                 link.style.visibility = 'hidden';
-                 document.body.appendChild(link);
-                 link.click();
-                 document.body.removeChild(link);
-                 URL.revokeObjectURL(url);
-                 console.log("Download initiated.");
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.setAttribute('href', url);
+                const safeParticipantId = String(state.participantId).replace(/[^a-z0-9_-]/gi, '_');
+                const timestamp = new Date().toISOString().split('T')[0];
+                link.setAttribute('download', `face_survey_${safeParticipantId}_${timestamp}.csv`);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+                console.log("Download initiated.");
             } catch (e) {
-                 console.error("Error creating download link:", e);
-                 alert("Could not initiate download.");
+                console.error("Error creating download link:", e);
+                alert("Could not initiate download.");
             }
         }
 
@@ -692,9 +794,9 @@
                 isValid = false;
             }
             if (!gender && isValid) { // Only show gender error if ID is okay
-                 elements.validationMessage.textContent = 'Please select your gender.';
-                 elements.genderSelect.focus();
-                 isValid = false;
+                elements.validationMessage.textContent = 'Please select your gender.';
+                elements.genderSelect.focus();
+                isValid = false;
             }
 
             if (!isValid) return;
@@ -705,16 +807,16 @@
             state.submissionAttempted = false; // Reset submission flag for new start
             elements.submissionStatus.textContent = ''; // Clear previous status
 
-             console.log(`Starting survey for Participant: ${state.participantId}, Gender: ${state.gender}`);
+            console.log(`Starting survey for Participant: ${state.participantId}, Gender: ${state.gender}`);
 
             state.currentCondition = 'upright';
             state.currentBatch = 0;
             state.currentTrial = 0;
 
             if (!setupConditionFaces()) {
-                 console.error("Failed to set up faces for the upright condition.");
-                 alert("A critical error occurred setting up the survey. Please check image configuration.");
-                 return;
+                console.error("Failed to set up faces for the upright condition.");
+                alert("A critical error occurred setting up the survey. Please check image configuration.");
+                return;
             }
 
             showScreen('training-screen');
@@ -728,4 +830,5 @@
     </script>
 
 </body>
+
 </html>
